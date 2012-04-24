@@ -51,7 +51,7 @@
               </li>
             
               <li>
-                <a href="#images/retrieving-data">Retrieving data</a>
+                <a href="#images/retrieving">Retrieving</a>
               </li>
             
               <li>
@@ -79,25 +79,25 @@
 <div id="content">
   
   <h1>Real Time Foto Moderator</h1>
-<p><a href="http://crowdflower.com/rtfm">RTFM</a> is a <a href="http://crowdflower.com">human-powered</a> 
+<p><a href="http://crowdflower.com/rtfm">RTFM</a> is a <a href="http://crowdflower.com">human-powered</a>
 image moderation API.
 
 </p>
 <h2 id='overview'>Overview</h2 id='overview'>
 <p>RTFM provides a <a href="http://en.wikipedia.org/wiki/Representational_state_transfer">RESTful</a>
-API that is designed to have resource-oriented URLs, use HTTP response codes to 
-indicate errors and use built-in HTTP features like HTTP authentication. All 
+API that is designed to have resource-oriented URLs, use HTTP response codes to
+indicate errors and use built-in HTTP features like HTTP authentication. All
 responses will be returned in JSON.
 
 </p>
-<p>The API endpoint is <code>http://rtfm.crowdflower.com/v1/</code>. All API requests must 
-be made over HTTPS. Requests made over plain HTTP will fail. Authentication is 
+<p>The API endpoint is <code>http://rtfm.crowdflower.com/v1/</code>. All API requests must
+be made over HTTPS. Requests made over plain HTTP will fail. Authentication is
 required for all requests.
 
 </p>
 <h3 id='overview/authentication'>Authentication</h3 id='overview/authentication'>
 <p>Authentication to the API occurs via <a href="http://en.wikipedia.org/wiki/Basic_access_authentication">HTTP Basic Auth</a>.
-Pass your API key as the basic auth username. You do not need to provide a 
+Pass your API key as the basic auth username. You do not need to provide a
 password.
 
 </p>
@@ -112,7 +112,7 @@ curl https:<span class="comment">//rtfm.crowdflower.com/v1/images \</span>
   -d <span class="string">"url=http://example.com/test.jpg"</span></code></pre>
 <h3 id='overview/errors'>Errors</h3 id='overview/errors'>
 <p>RTFM uses HTTP response codes to indicate success or failure of a request.
-Codes in the 2xx range indicate success, codes in the 4xx range indicate an 
+Codes in the 2xx range indicate success, codes in the 4xx range indicate an
 error and codes in the 5xx range indicate an error with RTFM&#39;s servers.
 
 </p>
@@ -124,23 +124,40 @@ error and codes in the 5xx range indicate an error with RTFM&#39;s servers.
 <li><strong>422</strong> Unprocessable entity - invalid submitted data</li>
 </ul>
 <h3 id='overview/rate-limit'>Rate limit</h3 id='overview/rate-limit'>
-<p>RTFM allows up to 500 requests per 10 second period from the same IP address 
+<p>RTFM allows up to 500 requests per 10 second period from the same IP address
 for the same account. If you exceed this limit, you&#39;ll get a
-429 Too Many Requests response for subsequent requests.
+<em>429 Too Many Requests</em> response for subsequent requests.
 
 </p>
 <p>Check the <code>Retry-After</code> header to see how many seconds to wait before retrying.
 
 </p>
 <h2 id='images'>Images</h2 id='images'>
-<p>RTFM will download and cache your image. Image URLs must be publically 
-accessible.
+<p>Moderators screen images based on an extensive ruleset. See
+<a href="#moderation">Moderation</a> for the list of criteria.
 
 </p>
-<p>A webhook will be sent for images that have completed moderation.
+<h5><strong>Score</strong></h5>
+<p>A confidence score, between 0 and 1, calculated from moderator responses.
+0 is rejected, 1 is approved.
 
 </p>
+<h5><strong>Rating</strong></h5>
+<ul>
+<li><strong>rejected</strong>: score less than 0.5</li>
+<li><strong>approved</strong>: score of 0.5 or greater</li>
+</ul>
+<h5><strong>States</strong></h5>
+<ul>
+<li><strong>processing</strong>: image is being moderated</li>
+<li><strong>on hold</strong>: account has insufficient funds</li>
+<li><strong>completed</strong>: image has completed moderation</li>
+</ul>
 <h3 id='images/posting'>Posting</h3 id='images/posting'>
+<p>Image URLs must be publically accessible. A <a href="#images/webhook">webhook</a> is sent
+when moderation for an image is completed.
+
+</p>
 <p><code>POST /images</code> uploads a image:
 
 </p>
@@ -165,7 +182,7 @@ curl https:<span class="comment">//rtfm.crowdflower.com/v1/images \</span>
     <span class="string">"url"</span>: {IMAGE_URL}
   }
 }</code></pre>
-<h3 id='images/retrieving-data'>Retrieving data</h3 id='images/retrieving-data'>
+<h3 id='images/retrieving'>Retrieving</h3 id='images/retrieving'>
 <p><code>GET /images/{IMAGE_ID}</code> returns metadata about a posted image.
 
 </p>
@@ -178,23 +195,16 @@ curl https:<span class="comment">//rtfm.crowdflower.com/v1/images \</span>
 <span class="preprocessor"># image: hash</span>
 <span class="preprocessor">#   "id": string</span>
 <span class="preprocessor">#   "url": string</span>
+<span class="preprocessor">#   "score: integer</span>
 <span class="preprocessor">#   "rating": string</span>
-<span class="preprocessor">#   "confidence": string</span>
 <span class="preprocessor">#   "state": string</span>
-<span class="preprocessor">#     "uploaded": image has been successfully uploaded.</span>
-<span class="preprocessor">#     "on hold": account associated with this image does not have enough funds</span>
-<span class="preprocessor">#     "authorized": </span>
-<span class="preprocessor">#     "processing": image is being moderated</span>
-<span class="preprocessor">#     "processed": image has completed moderation</span>
-<span class="preprocessor">#     "shipped": image has completed moderation and webhook has been sent</span>
-<span class="preprocessor">#     "completed": </span>
 
 {
   <span class="string">"image"</span>: {
     <span class="string">"id"</span>: {IMAGE_ID},
     <span class="string">"url"</span>: {IMAGE_URL},
+    <span class="string">"score: {IMAGE_SCORE},</span>
     <span class="string">"rating"</span>: {IMAGE_RATING},
-    <span class="string">"confidence"</span>: {IMAGE_CONFIDENCE},
     <span class="string">"state"</span>: {IMAGE_STATE}
   }
 }</code></pre>
@@ -208,29 +218,22 @@ This URL is managed in your account settings.
 <span class="preprocessor"># image: hash</span>
 <span class="preprocessor">#   "id": string</span>
 <span class="preprocessor">#   "url": string</span>
+<span class="preprocessor">#   "score: integer</span>
 <span class="preprocessor">#   "rating": string</span>
-<span class="preprocessor">#   "confidence": string</span>
 <span class="preprocessor">#   "state": string</span>
-<span class="preprocessor">#     "uploaded": image has been successfully uploaded.</span>
-<span class="preprocessor">#     "on hold": account associated with this image does not have enough funds</span>
-<span class="preprocessor">#     "authorized": </span>
-<span class="preprocessor">#     "processing": image is being moderated</span>
-<span class="preprocessor">#     "processed": image has completed moderation</span>
-<span class="preprocessor">#     "shipped": image has completed moderation and webhook has been sent</span>
-<span class="preprocessor">#     "completed": </span>
 
 {
   <span class="string">"image"</span>: {
     <span class="string">"id"</span>: {IMAGE_ID},
     <span class="string">"url"</span>: {IMAGE_URL},
+    <span class="string">"score: {IMAGE_SCORE},</span>
     <span class="string">"rating"</span>: {IMAGE_RATING},
-    <span class="string">"confidence"</span>: {IMAGE_CONFIDENCE},
     <span class="string">"state"</span>: {IMAGE_STATE}
   }
 }</code></pre>
 <h2 id='moderation'>Moderation</h2 id='moderation'>
-<p>Moderators follow extensive rules while screening images. These rules have been 
-effective in avoiding user complaints and problems with Apple&#39;s App Store 
+<p>Moderators follow extensive rules while screening images. These rules have been
+effective in avoiding user complaints and problems with Apple&#39;s App Store
 review process, specifically:
 
 </p>
@@ -283,7 +286,7 @@ review process, specifically:
 <li>profanity or curse words</li>
 </ul>
 <h2 id='contact'>Contact</h2 id='contact'>
-<p>Report issues or suggest improvements on our 
+<p>Report issues or suggest improvements on our
 <a href="https://github.com/dolores/rtfm-api">GitHub repository</a>.
 </p>
 
