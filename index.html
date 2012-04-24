@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RTFM</title>
+    
+    <link rel="stylesheet" type="text/css" href="http://documentup.com/stylesheets/screen.css">
+    
+    
+
+    
+  </head>
+  <body><div id="nav">
+  
+    <div id="header">
+      <a href="#" id="logo">RTFM</a>
+    </div>
+  
+  <ul id="sections">
+    
+      <li>
+        <a href="#overview">Overview</a>
+        
+          <ul>
+            
+              <li>
+                <a href="#overview/authentication">Authentication</a>
+              </li>
+            
+              <li>
+                <a href="#overview/errors">Errors</a>
+              </li>
+            
+              <li>
+                <a href="#overview/rate-limit">Rate limit</a>
+              </li>
+            
+          </ul>
+        
+      </li>
+    
+      <li>
+        <a href="#images">Images</a>
+        
+          <ul>
+            
+              <li>
+                <a href="#images/posting">Posting</a>
+              </li>
+            
+              <li>
+                <a href="#images/retrieving-data">Retrieving data</a>
+              </li>
+            
+              <li>
+                <a href="#images/webhook">Webhook</a>
+              </li>
+            
+          </ul>
+        
+      </li>
+    
+      <li>
+        <a href="#moderation">Moderation</a>
+        
+      </li>
+    
+      <li>
+        <a href="#contact">Contact</a>
+        
+      </li>
+    
+  </ul>
+  
+  
+</div>
+<div id="content">
+  
+  <h1>Real Time Foto Moderator</h1>
+<p><a href="http://crowdflower.com/rtfm">RTFM</a> is a <a href="http://crowdflower.com">human-powered</a> 
+image moderation API.
+
+</p>
+<h2 id='overview'>Overview</h2 id='overview'>
+<p>RTFM provides a <a href="http://en.wikipedia.org/wiki/Representational_state_transfer">RESTful</a>
+API that is designed to have resource-oriented URLs, use HTTP response codes to 
+indicate errors and use built-in HTTP features like HTTP authentication. All 
+responses will be returned in JSON.
+
+</p>
+<p>The API endpoint is <code>http://rtfm.crowdflower.com/v1/</code>. All API requests must 
+be made over HTTPS. Requests made over plain HTTP will fail. Authentication is 
+required for all requests.
+
+</p>
+<h3 id='overview/authentication'>Authentication</h3 id='overview/authentication'>
+<p>Authentication to the API occurs via <a href="http://en.wikipedia.org/wiki/Basic_access_authentication">HTTP Basic Auth</a>.
+Pass your API key as the basic auth username. You do not need to provide a 
+password.
+
+</p>
+<p>API keys are managed in your <a href="http://TODO">account settings</a>.
+
+</p>
+<pre><code class="shell"><span class="preprocessor"># curl uses the -u flag to pass basic auth credentials. Adding a colon after your</span>
+<span class="preprocessor"># API key will prevent curl from asking you for a password.</span>
+
+curl https:<span class="comment">//rtfm.crowdflower.com/v1/images \</span>
+  -u <span class="number">7</span>xgUnFVvHSsotiS6zaX2Nw1gcqwnBH0: \
+  -d <span class="string">"url=http://example.com/test.jpg"</span></code></pre>
+<h3 id='overview/errors'>Errors</h3 id='overview/errors'>
+<p>RTFM uses HTTP response codes to indicate success or failure of a request.
+Codes in the 2xx range indicate success, codes in the 4xx range indicate an 
+error and codes in the 5xx range indicate an error with RTFM&#39;s servers.
+
+</p>
+<ul>
+<li><strong>200</strong> OK - everything worked</li>
+<li><strong>401</strong> Unauthorized - invalid API key provided</li>
+<li><strong>402</strong> Payment required - insufficient funds on your account</li>
+<li><strong>404</strong> Not found - the requested item doesn&#39;t exist</li>
+<li><strong>422</strong> Unprocessable entity - invalid submitted data</li>
+</ul>
+<h3 id='overview/rate-limit'>Rate limit</h3 id='overview/rate-limit'>
+<p>RTFM allows up to 500 requests per 10 second period from the same IP address 
+for the same account. If you exceed this limit, you&#39;ll get a
+429 Too Many Requests response for subsequent requests.
+
+</p>
+<p>Check the <code>Retry-After</code> header to see how many seconds to wait before retrying.
+
+</p>
+<h2 id='images'>Images</h2 id='images'>
+<p>RTFM will download and cache your image. Image URLs must be publically 
+accessible.
+
+</p>
+<p>A webhook will be sent for images that have completed moderation.
+
+</p>
+<h3 id='images/posting'>Posting</h3 id='images/posting'>
+<p><code>POST /images</code> uploads a image:
+
+</p>
+<pre><code class="shell"><span class="preprocessor"># paramters:</span>
+<span class="preprocessor">#</span>
+<span class="preprocessor"># url: string</span>
+
+curl https:<span class="comment">//rtfm.crowdflower.com/v1/images \</span>
+  -u <span class="number">7</span>xgUnFVvHSsotiS6zaX2Nw1gcqwnBH0: \
+  -d <span class="string">"url=http://example.com/test.jpg"</span></code></pre>
+<p>Response:
+</p>
+<pre><code class="json"><span class="preprocessor"># attributes:</span>
+<span class="preprocessor">#</span>
+<span class="preprocessor"># image: hash</span>
+<span class="preprocessor">#   id: string</span>
+<span class="preprocessor">#   url: string</span>
+
+{
+  <span class="string">"image"</span>: {
+    <span class="string">"id"</span>: {IMAGE_ID},
+    <span class="string">"url"</span>: {IMAGE_URL}
+  }
+}</code></pre>
+<h3 id='images/retrieving-data'>Retrieving data</h3 id='images/retrieving-data'>
+<p><code>GET /images/{IMAGE_ID}</code> returns metadata about a posted image.
+
+</p>
+<pre><code class="shell">curl <span class="method">https:</span>//rtfm.crowdflower.com/v1/images/{<span class="class">CHARGE_ID</span>} \
+  -u <span class="number">7</span><span class="method">xgUnFVvHSsotiS6zaX2Nw1gcqwnBH0:</span></code></pre>
+<p>Response:
+</p>
+<pre><code class="json"><span class="preprocessor"># attributes:</span>
+<span class="preprocessor">#</span>
+<span class="preprocessor"># image: hash</span>
+<span class="preprocessor">#   "id": string</span>
+<span class="preprocessor">#   "url": string</span>
+<span class="preprocessor">#   "rating": string</span>
+<span class="preprocessor">#   "confidence": string</span>
+<span class="preprocessor">#   "state": string</span>
+<span class="preprocessor">#     "uploaded": image has been successfully uploaded.</span>
+<span class="preprocessor">#     "on hold": account associated with this image does not have enough funds</span>
+<span class="preprocessor">#     "authorized": </span>
+<span class="preprocessor">#     "processing": image is being moderated</span>
+<span class="preprocessor">#     "processed": image has completed moderation</span>
+<span class="preprocessor">#     "shipped": image has completed moderation and webhook has been sent</span>
+<span class="preprocessor">#     "completed": </span>
+
+{
+  <span class="string">"image"</span>: {
+    <span class="string">"id"</span>: {IMAGE_ID},
+    <span class="string">"url"</span>: {IMAGE_URL},
+    <span class="string">"rating"</span>: {IMAGE_RATING},
+    <span class="string">"confidence"</span>: {IMAGE_CONFIDENCE},
+    <span class="string">"state"</span>: {IMAGE_STATE}
+  }
+}</code></pre>
+<h3 id='images/webhook'>Webhook</h3 id='images/webhook'>
+<p>We will POST moderation results to your webhook URL.
+This URL is managed in your account settings.
+
+</p>
+<pre><code class="json"><span class="preprocessor"># attributes:</span>
+<span class="preprocessor">#</span>
+<span class="preprocessor"># image: hash</span>
+<span class="preprocessor">#   "id": string</span>
+<span class="preprocessor">#   "url": string</span>
+<span class="preprocessor">#   "rating": string</span>
+<span class="preprocessor">#   "confidence": string</span>
+<span class="preprocessor">#   "state": string</span>
+<span class="preprocessor">#     "uploaded": image has been successfully uploaded.</span>
+<span class="preprocessor">#     "on hold": account associated with this image does not have enough funds</span>
+<span class="preprocessor">#     "authorized": </span>
+<span class="preprocessor">#     "processing": image is being moderated</span>
+<span class="preprocessor">#     "processed": image has completed moderation</span>
+<span class="preprocessor">#     "shipped": image has completed moderation and webhook has been sent</span>
+<span class="preprocessor">#     "completed": </span>
+
+{
+  <span class="string">"image"</span>: {
+    <span class="string">"id"</span>: {IMAGE_ID},
+    <span class="string">"url"</span>: {IMAGE_URL},
+    <span class="string">"rating"</span>: {IMAGE_RATING},
+    <span class="string">"confidence"</span>: {IMAGE_CONFIDENCE},
+    <span class="string">"state"</span>: {IMAGE_STATE}
+  }
+}</code></pre>
+<h2 id='moderation'>Moderation</h2 id='moderation'>
+<p>Moderators follow extensive rules while screening images. These rules have been 
+effective in avoiding user complaints and problems with Apple&#39;s App Store 
+review process, specifically:
+
+</p>
+<p><strong>prohibited sexual material or nudity</strong>:
+
+</p>
+<ul>
+<li>sexual acts, either real or illustrated</li>
+<li>sexually explicit or overly suggestive photos</li>
+<li>nudity (frontal, back or side)</li>
+<li>nudity (particularly of the genitals) covered by a towel, hat or other means</li>
+<li>grabbing, holding or touching genitals or genital area</li>
+<li>transparent/sheer or wet material below the waist or covering women&#39;s nipples/breasts</li>
+<li>erections or outline of genitals through clothing</li>
+<li>bare skin one inch directly above the pubic area</li>
+<li>shirtless body shots indoors. shirtless body shots are only allowed in natural settings (e.g. beach or swimming pool)</li>
+<li>cleavage shots without a face</li>
+<li>public hair</li>
+<li>underwear, including underwear waistband showing above pants</li>
+<li>body/torso shots without a head/face</li>
+<li>crotch/butt/abs without a head/face</li>
+<li>display of semen or any fluid made to look like semen or ejaculate</li>
+<li>images edited to disguise sexual acts (e.g. black box or blurred filters)</li>
+<li>sex props or toys, including the use of fruits/vegetables</li>
+<li>any obscene gestures or lewd behavior (e.g. middle finger or banana used to simulate male genitalia)</li>
+<li>hands or fingers placed in pants or pulling underwear outward</li>
+</ul>
+<p><strong>appropriate dress</strong>:
+
+</p>
+<ul>
+<li>public swimwear is allowed if the following is observed: no pubic hair, no women&#39;s nipples, no outline of genitals and no portion of the butt can be present</li>
+<li>swimwear photos are only allowed if they are in natural settings (e.g. beach or swimming pool)</li>
+<li>pants and shorts must be worn normally, buttoned and not pulled or hanging down</li>
+</ul>
+<p><strong>prohibited ads or copyrighted material</strong>:
+
+</p>
+<ul>
+<li>advertised services, goods, events, websites or apps</li>
+<li>images or illustrations</li>
+</ul>
+<p><strong>prohibited violent or illegal material</strong>:
+
+</p>
+<ul>
+<li>illegal drugs, drug use or paraphernalia</li>
+<li>guns, firearms or weapons</li>
+<li>violent acts to the user, someone else or animals (including blood)</li>
+<li>profanity or curse words</li>
+</ul>
+<h2 id='contact'>Contact</h2 id='contact'>
+<p>Report issues or suggest improvements on our 
+<a href="https://github.com/dolores/rtfm-api">GitHub repository</a>.
+</p>
+
+</div></body>
+</html>
