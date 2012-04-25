@@ -10,7 +10,7 @@ API that is designed to have resource-oriented URLs, use HTTP response codes to
 indicate errors and use built-in HTTP features like HTTP authentication. All
 responses will be returned in JSON.
 
-The API endpoint is `http://rtfm.crowdflower.com/v1/`. All API requests must
+The API endpoint is `https://rtfm.crowdflower.com/v1/`. All API requests must
 be made over HTTPS. Requests made over plain HTTP will fail. Authentication is
 required for all requests.
 
@@ -77,16 +77,24 @@ A confidence score, between 0 and 1, calculated from moderator responses.
 Image URLs must be publically accessible. A [webhook](#images/webhook) is sent
 when moderation for an image is completed.
 
+An optional metadata hash parameter can be posted with your image. You can use
+this parameter for arbitrary data, e.g. an internal primary key. We will return
+this metadata with your image data when we send a webhook or if you make API
+call, requesting that image.
+
 `POST /images` uploads a image:
 
 ```shell
 # paramters:
 #
-# url: string
+# "url": string
+# "metadata" (optional): hash
 
 curl https://rtfm.crowdflower.com/v1/images \
   -u 7xgUnFVvHSsotiS6zaX2Nw1gcqwnBH0: \
-  -d "url=http://example.com/test.jpg"
+  -d "url=http://example.com/test.jpg" \
+  -d "metadata[internal_id]=Aj39x" \
+  -d "metadata[internal_status]=spam"
 ```
 
 Response:
@@ -94,20 +102,22 @@ Response:
 # attributes:
 #
 # image: hash
-#   id: string
-#   url: string
+#   "id": string
+#   "url": string
+#   "metadata" (optional): hash
 
 {
   "image": {
     "id": {IMAGE_ID},
-    "url": {IMAGE_URL}
+    "url": {IMAGE_URL},
+    "metadata": {IMAGE_METADATA}
   }
 }
 ```
 
 ### Retrieving
 
-`GET /images/{IMAGE_ID}` returns metadata about a posted image.
+`GET /images/{IMAGE_ID}` returns data about a posted image.
 
 ```shell
 curl https://rtfm.crowdflower.com/v1/images/{CHARGE_ID} \
@@ -124,6 +134,7 @@ Response:
 #   "score: integer
 #   "rating": string
 #   "state": string
+#   "metadata" (optional): hash
 
 {
   "image": {
@@ -131,7 +142,8 @@ Response:
     "url": {IMAGE_URL},
     "score: {IMAGE_SCORE},
     "rating": {IMAGE_RATING},
-    "state": {IMAGE_STATE}
+    "state": {IMAGE_STATE},
+    "metadata": {IMAGE_METADATA}
   }
 }
 ```
@@ -150,6 +162,7 @@ This URL is managed in your account settings.
 #   "score: integer
 #   "rating": string
 #   "state": string
+#   "metadata" (optional): hash
 
 {
   "image": {
@@ -157,7 +170,8 @@ This URL is managed in your account settings.
     "url": {IMAGE_URL},
     "score: {IMAGE_SCORE},
     "rating": {IMAGE_RATING},
-    "state": {IMAGE_STATE}
+    "state": {IMAGE_STATE},
+    "metadata": {IMAGE_METADATA}
   }
 }
 ```
