@@ -20,7 +20,7 @@ Authentication to the API occurs via [HTTP Basic Auth](http://en.wikipedia.org/w
 Pass your API key as the basic auth username. You do not need to provide a
 password.
 
-API keys are managed in your [account settings](http://TODO).
+API keys are managed in your account settings.
 
 ```shell
 # curl uses the -u flag to pass basic auth credentials. Adding a colon after your
