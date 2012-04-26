@@ -45,11 +45,9 @@ error and codes in the 5xx range indicate an error with RTFM's servers.
 
 ### Rate limit
 
-RTFM allows up to 500 requests per 10 second period from the same IP address
-for the same account. If you exceed this limit, you'll get a
-*429 Too Many Requests* response for subsequent requests.
-
-Check the `Retry-After` header to see how many seconds to wait before retrying.
+RTFM allows up to 10 requests per second from the same IP address. If you
+exceed this limit, you'll get a *503 Service Unavailable* response for subsequent
+requests.
 
 ## Images
 
