@@ -90,7 +90,7 @@ indicate errors and use built-in HTTP features like HTTP authentication. All
 responses will be returned in JSON.
 
 </p>
-<p>The API endpoint is <code>http://rtfm.crowdflower.com/v1/</code>. All API requests must
+<p>The API endpoint is <code>https://rtfm.crowdflower.com/v1/</code>. All API requests must
 be made over HTTPS. Requests made over plain HTTP will fail. Authentication is
 required for all requests.
 
@@ -158,32 +158,43 @@ for the same account. If you exceed this limit, you&#39;ll get a
 when moderation for an image is completed.
 
 </p>
+<p>An optional metadata hash parameter can be posted with your image. You can use
+this parameter for arbitrary data, e.g. an internal primary key. We will return
+this metadata with your image data when we send a webhook or if you make API
+call, requesting that image.
+
+</p>
 <p><code>POST /images</code> uploads a image:
 
 </p>
 <pre><code class="shell"><span class="preprocessor"># paramters:</span>
 <span class="preprocessor">#</span>
-<span class="preprocessor"># url: string</span>
+<span class="preprocessor"># "url": string</span>
+<span class="preprocessor"># "metadata" (optional): hash</span>
 
 curl https:<span class="comment">//rtfm.crowdflower.com/v1/images \</span>
   -u <span class="number">7</span>xgUnFVvHSsotiS6zaX2Nw1gcqwnBH0: \
-  -d <span class="string">"url=http://example.com/test.jpg"</span></code></pre>
+  -d <span class="string">"url=http://example.com/test.jpg"</span> \
+  -d <span class="string">"metadata[internal_id]=Aj39x"</span> \
+  -d <span class="string">"metadata[internal_status]=spam"</span></code></pre>
 <p>Response:
 </p>
 <pre><code class="json"><span class="preprocessor"># attributes:</span>
 <span class="preprocessor">#</span>
 <span class="preprocessor"># image: hash</span>
-<span class="preprocessor">#   id: string</span>
-<span class="preprocessor">#   url: string</span>
+<span class="preprocessor">#   "id": string</span>
+<span class="preprocessor">#   "url": string</span>
+<span class="preprocessor">#   "metadata" (optional): hash</span>
 
 {
   <span class="string">"image"</span>: {
     <span class="string">"id"</span>: {IMAGE_ID},
-    <span class="string">"url"</span>: {IMAGE_URL}
+    <span class="string">"url"</span>: {IMAGE_URL},
+    <span class="string">"metadata"</span>: {IMAGE_METADATA}
   }
 }</code></pre>
 <h3 id='images/retrieving'>Retrieving</h3 id='images/retrieving'>
-<p><code>GET /images/{IMAGE_ID}</code> returns metadata about a posted image.
+<p><code>GET /images/{IMAGE_ID}</code> returns data about a posted image.
 
 </p>
 <pre><code class="shell">curl <span class="method">https:</span>//rtfm.crowdflower.com/v1/images/{<span class="class">CHARGE_ID</span>} \
@@ -198,6 +209,7 @@ curl https:<span class="comment">//rtfm.crowdflower.com/v1/images \</span>
 <span class="preprocessor">#   "score: integer</span>
 <span class="preprocessor">#   "rating": string</span>
 <span class="preprocessor">#   "state": string</span>
+<span class="preprocessor">#   "metadata" (optional): hash</span>
 
 {
   <span class="string">"image"</span>: {
@@ -205,7 +217,8 @@ curl https:<span class="comment">//rtfm.crowdflower.com/v1/images \</span>
     <span class="string">"url"</span>: {IMAGE_URL},
     <span class="string">"score: {IMAGE_SCORE},</span>
     <span class="string">"rating"</span>: {IMAGE_RATING},
-    <span class="string">"state"</span>: {IMAGE_STATE}
+    <span class="string">"state"</span>: {IMAGE_STATE},
+    <span class="string">"metadata"</span>: {IMAGE_METADATA}
   }
 }</code></pre>
 <h3 id='images/webhook'>Webhook</h3 id='images/webhook'>
@@ -221,6 +234,7 @@ This URL is managed in your account settings.
 <span class="preprocessor">#   "score: integer</span>
 <span class="preprocessor">#   "rating": string</span>
 <span class="preprocessor">#   "state": string</span>
+<span class="preprocessor">#   "metadata" (optional): hash</span>
 
 {
   <span class="string">"image"</span>: {
@@ -228,9 +242,17 @@ This URL is managed in your account settings.
     <span class="string">"url"</span>: {IMAGE_URL},
     <span class="string">"score: {IMAGE_SCORE},</span>
     <span class="string">"rating"</span>: {IMAGE_RATING},
-    <span class="string">"state"</span>: {IMAGE_STATE}
+    <span class="string">"state"</span>: {IMAGE_STATE},
+    <span class="string">"metadata"</span>: {IMAGE_METADATA}
   }
 }</code></pre>
+<h4>Signature</h4>
+<p>All webhook POSTs include a &quot;X-CrowdFlower-Signature&quot; HTTP header. The signature
+is computed by signing the webhook data. You can use
+<a href="http://rtfm.crowdflower.com/webhook_public.pem">this public key</a> to verify the 
+signature.
+
+</p>
 <h2 id='moderation'>Moderation</h2 id='moderation'>
 <p>Moderators follow extensive rules while screening images. These rules have been
 effective in avoiding user complaints and problems with Apple&#39;s App Store
