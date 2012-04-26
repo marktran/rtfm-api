@@ -124,12 +124,9 @@ error and codes in the 5xx range indicate an error with RTFM&#39;s servers.
 <li><strong>422</strong> Unprocessable entity - invalid submitted data</li>
 </ul>
 <h3 id='overview/rate-limit'>Rate limit</h3 id='overview/rate-limit'>
-<p>RTFM allows up to 500 requests per 10 second period from the same IP address
-for the same account. If you exceed this limit, you&#39;ll get a
-<em>429 Too Many Requests</em> response for subsequent requests.
-
-</p>
-<p>Check the <code>Retry-After</code> header to see how many seconds to wait before retrying.
+<p>RTFM allows up to 10 requests per second from the same IP address. If you
+exceed this limit, you&#39;ll get a <em>503 Service Unavailable</em> response for subsequent
+requests.
 
 </p>
 <h2 id='images'>Images</h2 id='images'>
