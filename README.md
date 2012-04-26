@@ -179,7 +179,7 @@ This URL is managed in your account settings.
 #### Signature
 
 All webhook POSTs include a "X-CrowdFlower-Signature" HTTP header. The signature
-is computed by signing the webhook data. You can use
+is computed by signing the webhook data. Use
 [this public key](http://rtfm.crowdflower.com/webhook_public.pem) to verify the 
 signature.
 
