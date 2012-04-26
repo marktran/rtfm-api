@@ -199,7 +199,7 @@ review process, specifically:
 * bare skin one inch directly above the pubic area
 * shirtless body shots indoors. shirtless body shots are only allowed in natural settings (e.g. beach or swimming pool)
 * cleavage shots without a face
-* public hair
+* pubic hair
 * underwear, including underwear waistband showing above pants
 * body/torso shots without a head/face
 * crotch/butt/abs without a head/face
