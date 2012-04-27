@@ -31,6 +31,26 @@ curl https://rtfm.crowdflower.com/v1/images \
   -d "url=http://example.com/test.jpg"
 ```
 
+### Testing
+
+RTFM provides a developer authentication key for testing. You can find this
+key in your *Developer* subscription settings. All documented API calls work 
+with your developer key. 
+
+Images posted using this key are not sent to moderators in the crowd—they're
+moderated based on substrings in the posted *url* parameter:
+
+```ascii
+| substring | url                             | moderation result                    |
+|-----------+---------------------------------+--------------------------------------|
+| approved  | http://example.com/approved.jpg | { "score": 1.0, "rating": approved } |
+| rejected  | http://example.com/rejected.jpg | { "score": 0.1, "rating": rejected } |
+| neither   | http://example.com/neither.jpg  | random result, either of the above   |
+```
+
+The substring can be anywhere in your domain, filename or query string.
+A webhook will be posted to your webhook URL within several minutes.
+
 ### Errors
 
 RTFM uses HTTP response codes to indicate success or failure of a request.
