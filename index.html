@@ -30,6 +30,10 @@
               </li>
             
               <li>
+                <a href="#overview/testing">Testing</a>
+              </li>
+            
+              <li>
                 <a href="#overview/errors">Errors</a>
               </li>
             
@@ -110,6 +114,25 @@ password.
 curl https:<span class="comment">//rtfm.crowdflower.com/v1/images \</span>
   -u <span class="number">7</span>xgUnFVvHSsotiS6zaX2Nw1gcqwnBH0: \
   -d <span class="string">"url=http://example.com/test.jpg"</span></code></pre>
+<h3 id='overview/testing'>Testing</h3 id='overview/testing'>
+<p>RTFM provides a developer authentication key for testing. You can find this
+key in your <em>Developer</em> subscription settings. All documented API calls work 
+with your developer key. 
+
+</p>
+<p>Images posted using this key are not sent to moderators in the crowd—they&#39;re
+moderated based on substrings in the posted <em>url</em> parameter:
+
+</p>
+<pre><code class="ascii"><span class="localvars">| substring |</span> url                             <span class="localvars">| moderation result                    |</span>
+|-----------+---------------------------------+--------------------------------------|
+<span class="localvars">| approved  |</span> <span class="method">http:</span>//example.com/approved.jpg | { <span class="comment">"score"</span>: <span class="number">1.0</span>, <span class="comment">"rating"</span>: approved } |
+<span class="localvars">| rejected  |</span> <span class="method">http:</span>//example.com/rejected.jpg | { <span class="comment">"score"</span>: <span class="number">0.1</span>, <span class="comment">"rating"</span>: rejected } |
+<span class="localvars">| neither   |</span> <span class="method">http:</span>//example.com/neither.jpg  | random result, either of the above   |</code></pre>
+<p>The substring can be anywhere in your domain, filename or query string.
+A webhook will be posted to your webhook URL within several minutes.
+
+</p>
 <h3 id='overview/errors'>Errors</h3 id='overview/errors'>
 <p>RTFM uses HTTP response codes to indicate success or failure of a request.
 Codes in the 2xx range indicate success, codes in the 4xx range indicate an
