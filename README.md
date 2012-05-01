@@ -196,48 +196,44 @@ This URL is managed in your account settings.
 
 #### Failure
 
-We will retry the webhook upto 10 times if your server returns a 5xx error.
-If the system detects 10 consecutive 5xx errors for a single image, we will
-disable the webhook and notify you.  Once the error has been addressed, all
-pending webhooks will be sent again.
+RTFM will retry webhooks up to 10 times if your server returns a 5xx error.
+If we detect 10 consecutive 5xx errors for a single image, we will disable the
+webhook and notify you. All pending webhooks will be sent when you re-enable
+your webhook.
 
 #### Signature
 
-All webhook POSTs include a "X-CrowdFlower-Signature" HTTP header.  You can use
-this signature to ensure that you only accepts requests from our servers.  The signature
-is computed by signing the unescaped JSON body of the request with an RSA key.
-The signature uses a SHA1 digest of the JSON body and is base64 encoded. Use 
-[this public key](http://rtfm.crowdflower.com/webhook_public.pem) to verify the 
-signature.  Below are some code examples:
+All webhook POSTs include a "X-CrowdFlower-Signature" HTTP header. You can use
+this signature to ensure that you only accepts requests from our servers.
 
-Bash:
-```bash
+The signature is composed of a Base64 encoded SHA1 digest of the JSON body and is
+computed by signing the unescaped JSON body of the request with an RSA key.
 
+Use [this public key](http://rtfm.crowdflower.com/webhook_public.pem) to verify
+the signature.
+
+Shell:
+```shell
 echo -n "unescaped JSON body of webhook request" > body.json
 echo "base64 encoded contents of X-CrowdFlower-Signature" | openssl enc -base64 -d > sig.txt
 openssl dgst -sha1 -verify webhook_public.pem -signature sig.txt body.json
-
 ```
 
 Ruby:
 ```ruby
-
 public_key = OpenSSL::PKey::RSA.new(File.read("webhook_public.pem"))
 digest = OpenSSL::Digest::SHA1.new
 public_key.verify(digest, Base64.decode64(signature), unencoded_json_body)
-
 ```
 
 PHP:
 ```php
-
 $fp = fopen("webhook_public.pem", "r");
 $cert = fread($fp, 8192);
 fclose($fp);
 $pubkeyid = openssl_get_publickey($cert);
 openssl_verify($data, $signature, $pubkeyid);
 openssl_free_key($pubkeyid);
-
 ```
 
 
