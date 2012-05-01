@@ -266,13 +266,44 @@ This URL is managed in your account settings.
     <span class="string">"metadata"</span>: {IMAGE_METADATA}
   }
 }</code></pre>
-<h4>Signature</h4>
-<p>All webhook POSTs include a &quot;X-CrowdFlower-Signature&quot; HTTP header. The signature
-is computed by signing the webhook data. Use
-<a href="http://rtfm.crowdflower.com/webhook_public.pem">this public key</a> to verify the 
-signature.
+<h4>Failure</h4>
+<p>RTFM will retry webhooks up to 10 times if your server returns a 5xx error.
+If we detect 10 consecutive 5xx errors for a single image, we will disable the
+webhook and notify you. All pending webhooks will be sent when you re-enable
+your webhook.
 
 </p>
+<h4>Signature</h4>
+<p>All webhook POSTs include a &quot;X-CrowdFlower-Signature&quot; HTTP header. You can use
+this signature to ensure that you only accepts requests from our servers.
+
+</p>
+<p>The signature is composed of a Base64 encoded SHA1 digest of the JSON body and is
+computed by signing the unescaped JSON body of the request with an RSA key.
+
+</p>
+<p>Use <a href="http://rtfm.crowdflower.com/webhook_public.pem">this public key</a> to verify
+the signature.
+
+</p>
+<p>Shell:
+</p>
+<pre><code class="shell">echo -n <span class="string">"unescaped JSON body of webhook request"</span> > body<span class="preprocessor">.json</span>
+echo <span class="string">"base64 encoded contents of X-CrowdFlower-Signature"</span> | openssl enc -base64 -d > sig<span class="preprocessor">.txt</span>
+openssl dgst -sha1 -verify webhook_public<span class="preprocessor">.pem</span> -signature sig<span class="preprocessor">.txt</span> body<span class="preprocessor">.json</span></code></pre>
+<p>Ruby:
+</p>
+<pre><code class="ruby"><span class="identifier">public_key</span> = <span class="constant">OpenSSL::PKey::RSA</span>.<span class="identifier"><span class="keymethods">new</span></span>(<span class="constant">File</span>.<span class="identifier"><span class="keymethods">read</span></span>(<span class="string">"webhook_public.pem"</span>))
+<span class="identifier">digest</span> = <span class="constant">OpenSSL::Digest::SHA1</span>.<span class="identifier"><span class="keymethods">new</span></span>
+<span class="identifier">public_key</span>.<span class="identifier">verify</span>(<span class="identifier">digest</span>, <span class="constant">Base64</span>.<span class="identifier">decode64</span>(<span class="identifier">signature</span>), <span class="identifier">unencoded_json_body</span>)</code></pre>
+<p>PHP:
+</p>
+<pre><code class="php"><span class="variable">$fp</span> = fopen(<span class="string">"webhook_public.pem"</span>, <span class="string">"r"</span>);
+<span class="variable">$cert</span> = fread(<span class="variable">$fp</span>, <span class="number">8192</span>);
+fclose(<span class="variable">$fp</span>);
+<span class="variable">$pubkeyid</span> = openssl_get_publickey(<span class="variable">$cert</span>);
+openssl_verify(<span class="variable">$data</span>, <span class="variable">$signature</span>, <span class="variable">$pubkeyid</span>);
+openssl_free_key(<span class="variable">$pubkeyid</span>);</code></pre>
 <h2 id='moderation'>Moderation</h2 id='moderation'>
 <p>Moderators follow extensive rules while screening images. These rules have been
 effective in avoiding user complaints and problems with Apple&#39;s App Store
