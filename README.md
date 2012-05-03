@@ -286,3 +286,7 @@ review process, specifically:
 * guns, firearms or weapons
 * violent acts to the user, someone else or animals (including blood)
 * profanity or curse words
+
+## Contact
+Report issues or suggest improvements on our
+[GitHub repository](https://github.com/dolores/rtfm-api/issues).
