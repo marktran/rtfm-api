@@ -196,10 +196,11 @@ This URL is managed in your account settings.
 
 #### Failure
 
-RTFM will retry webhooks up to 10 times if your server returns a 5xx error.
-If we detect 10 consecutive 5xx errors for a single image, we will disable the
-webhook and notify you. All pending webhooks will be sent when you re-enable
-your webhook.
+RTFM expects a 2xx HTTP response code when posting webhooks to your server. Your
+webhook will immediately be disabled if we receive a 3xx or 4xx response code.
+RTFM will retry up to 10 times if your server returns a 5xx error. If there are
+10 consecutive 5xx errors for a single image, we will disable the webhook and
+notify you. All pending webhooks will be sent when you re-enable your webhook.
 
 #### Signature
 
@@ -285,8 +286,3 @@ review process, specifically:
 * guns, firearms or weapons
 * violent acts to the user, someone else or animals (including blood)
 * profanity or curse words
-
-## Contact
-
-Report issues or suggest improvements on our
-[GitHub repository](https://github.com/dolores/rtfm-api).
