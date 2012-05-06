@@ -138,7 +138,7 @@ Response:
 `GET /images/{IMAGE_ID}` returns data about a posted image.
 
 ```shell
-curl https://rtfm.crowdflower.com/v1/images/{CHARGE_ID} \
+curl https://rtfm.crowdflower.com/v1/images/{IMAGE_ID} \
   -u 7xgUnFVvHSsotiS6zaX2Nw1gcqwnBH0:
 ```
 
@@ -149,7 +149,7 @@ Response:
 # image: hash
 #   "id": string
 #   "url": string
-#   "score: integer
+#   "score": integer
 #   "rating": string
 #   "state": string
 #   "metadata" (optional): hash
@@ -158,7 +158,7 @@ Response:
   "image": {
     "id": {IMAGE_ID},
     "url": {IMAGE_URL},
-    "score: {IMAGE_SCORE},
+    "score": {IMAGE_SCORE},
     "rating": {IMAGE_RATING},
     "state": {IMAGE_STATE},
     "metadata": {IMAGE_METADATA}
@@ -177,7 +177,7 @@ This URL is managed in your account settings.
 # image: hash
 #   "id": string
 #   "url": string
-#   "score: integer
+#   "score": integer
 #   "rating": string
 #   "state": string
 #   "metadata" (optional): hash
@@ -186,7 +186,7 @@ This URL is managed in your account settings.
   "image": {
     "id": {IMAGE_ID},
     "url": {IMAGE_URL},
-    "score: {IMAGE_SCORE},
+    "score": {IMAGE_SCORE},
     "rating": {IMAGE_RATING},
     "state": {IMAGE_STATE},
     "metadata": {IMAGE_METADATA}
@@ -240,6 +240,13 @@ openssl_free_key($pubkeyid);
 
 ```
 
+## Tools
+
+CrowdFlower currently maintains a Ruby gem for interacting with the API.  The gem
+can be found here: https://github.com/dolores/rtfm-ruby
+
+If you've created a simple wrapper for the RTFM API in another language, we would
+be happy to host it on our Github account.  Let us know by emailing rtfm@crowdflower.com
 
 ## Moderation
 
@@ -293,4 +300,4 @@ review process, specifically:
 ## Contact
 
 Report issues or suggest improvements on our
-[GitHub repository](https://github.com/dolores/rtfm-api).
+[GitHub repository](https://github.com/dolores/rtfm-api) or email us at rtfm@crowdflower.com.
