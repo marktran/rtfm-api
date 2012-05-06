@@ -237,10 +237,14 @@ openssl_verify($data, $signature, $pubkeyid);
 openssl_free_key($pubkeyid);
 ```
 
-## Tools
+## API Libraries 
+
+### Ruby
 
 CrowdFlower currently maintains a Ruby gem for interacting with the API.  The gem
 can be found here: https://github.com/dolores/rtfm-ruby
+
+### Other
 
 If you've created a simple wrapper for the RTFM API in another language, we would
 be happy to host it on our Github account.  Let us know by emailing rtfm@crowdflower.com
