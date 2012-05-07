@@ -33,7 +33,9 @@ curl https://rtfm.crowdflower.com/v1/images \
 
 ### Testing
 
-RTFM provides a special *Test* subscription type. Select your *Test* subscription, and then get the test key from *API Settings*. All documented API calls work with your test key. 
+RTFM provides a *Test* subscription type. Select your *Test* subscription and
+then get the test key from the *API Settings* page. All documented API calls work with
+your test key.
 
 Images posted using this key are not sent to moderators in the crowd—they're
 moderated based on substrings in the posted *url* parameter:
