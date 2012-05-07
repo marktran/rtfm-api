@@ -33,9 +33,7 @@ curl https://rtfm.crowdflower.com/v1/images \
 
 ### Testing
 
-RTFM provides a developer authentication key for testing. You can find this
-key in your *Developer* subscription settings. All documented API calls work 
-with your developer key. 
+RTFM provides a special *Test* subscription type. Select your *Test* subscription, and then get the test key from *API Settings*. All documented API calls work with your test key. 
 
 Images posted using this key are not sent to moderators in the crowd—they're
 moderated based on substrings in the posted *url* parameter:
@@ -54,13 +52,15 @@ A webhook will be posted to your webhook URL within several minutes.
 ### Errors
 
 RTFM uses HTTP response codes to indicate success or failure of a request.
-Codes in the 2xx range indicate success, codes in the 4xx range indicate an
-error and codes in the 5xx range indicate an error with RTFM's servers.
+Codes in the 2xx range indicate success, codes in the 4xx range indicate a
+request error, and codes in the 5xx range indicate an error with RTFM's servers.
 
 * **200** OK - everything worked
-* **401** Unauthorized - invalid API key provided
+* **401** Authentication required - invalid API key provided
 * **402** Payment required - insufficient funds on your account
+* **403** Unauthorized - insufficient privileges to access
 * **404** Not found - the requested item doesn't exist
+* **406** Not acceptable - cannot respond with the requested format (API is JSON only)
 * **422** Unprocessable entity - invalid submitted data
 
 ### Rate limit
@@ -92,7 +92,7 @@ A confidence score, between 0 and 1, calculated from moderator responses.
 
 ### Posting
 
-Image URLs must be publically accessible. A [webhook](#images/webhook) is sent
+Image URLs must be publicly accessible. A [webhook](#images/webhook) is sent
 when moderation for an image is completed.
 
 An optional metadata hash parameter can be posted with your image. You can use
