@@ -67,6 +67,23 @@
       </li>
     
       <li>
+        <a href="#api-libraries">API Libraries</a>
+        
+          <ul>
+            
+              <li>
+                <a href="#api-libraries/ruby">Ruby</a>
+              </li>
+            
+              <li>
+                <a href="#api-libraries/other">Other</a>
+              </li>
+            
+          </ul>
+        
+      </li>
+    
+      <li>
         <a href="#moderation">Moderation</a>
         
       </li>
@@ -217,7 +234,7 @@ curl https:<span class="comment">//rtfm.crowdflower.com/v1/images \</span>
 <p><code>GET /images/{IMAGE_ID}</code> returns data about a posted image.
 
 </p>
-<pre><code class="shell">curl <span class="method">https:</span>//rtfm.crowdflower.com/v1/images/{<span class="class">CHARGE_ID</span>} \
+<pre><code class="shell">curl <span class="method">https:</span>//rtfm.crowdflower.com/v1/images/{<span class="class">IMAGE_ID</span>} \
   -u <span class="number">7</span><span class="method">xgUnFVvHSsotiS6zaX2Nw1gcqwnBH0:</span></code></pre>
 <p>Response:
 </p>
@@ -226,7 +243,7 @@ curl https:<span class="comment">//rtfm.crowdflower.com/v1/images \</span>
 <span class="preprocessor"># image: hash</span>
 <span class="preprocessor">#   "id": string</span>
 <span class="preprocessor">#   "url": string</span>
-<span class="preprocessor">#   "score: integer</span>
+<span class="preprocessor">#   "score": integer</span>
 <span class="preprocessor">#   "rating": string</span>
 <span class="preprocessor">#   "state": string</span>
 <span class="preprocessor">#   "metadata" (optional): hash</span>
@@ -235,7 +252,7 @@ curl https:<span class="comment">//rtfm.crowdflower.com/v1/images \</span>
   <span class="string">"image"</span>: {
     <span class="string">"id"</span>: {IMAGE_ID},
     <span class="string">"url"</span>: {IMAGE_URL},
-    <span class="string">"score: {IMAGE_SCORE},</span>
+    <span class="string">"score"</span>: {IMAGE_SCORE},
     <span class="string">"rating"</span>: {IMAGE_RATING},
     <span class="string">"state"</span>: {IMAGE_STATE},
     <span class="string">"metadata"</span>: {IMAGE_METADATA}
@@ -251,7 +268,7 @@ This URL is managed in your account settings.
 <span class="preprocessor"># image: hash</span>
 <span class="preprocessor">#   "id": string</span>
 <span class="preprocessor">#   "url": string</span>
-<span class="preprocessor">#   "score: integer</span>
+<span class="preprocessor">#   "score": integer</span>
 <span class="preprocessor">#   "rating": string</span>
 <span class="preprocessor">#   "state": string</span>
 <span class="preprocessor">#   "metadata" (optional): hash</span>
@@ -260,7 +277,7 @@ This URL is managed in your account settings.
   <span class="string">"image"</span>: {
     <span class="string">"id"</span>: {IMAGE_ID},
     <span class="string">"url"</span>: {IMAGE_URL},
-    <span class="string">"score: {IMAGE_SCORE},</span>
+    <span class="string">"score"</span>: {IMAGE_SCORE},
     <span class="string">"rating"</span>: {IMAGE_RATING},
     <span class="string">"state"</span>: {IMAGE_STATE},
     <span class="string">"metadata"</span>: {IMAGE_METADATA}
@@ -276,7 +293,7 @@ notify you. All pending webhooks will be sent when you re-enable your webhook.
 </p>
 <h4>Signature</h4>
 <p>All webhook POSTs include a &quot;X-CrowdFlower-Signature&quot; HTTP header. You can use
-this signature to ensure that you only accepts requests from our servers.
+this signature to ensure that you only accept requests from our servers.
 
 </p>
 <p>The signature is composed of a Base64 encoded SHA1 digest of the JSON body and is
@@ -305,6 +322,17 @@ fclose(<span class="variable">$fp</span>);
 <span class="variable">$pubkeyid</span> = openssl_get_publickey(<span class="variable">$cert</span>);
 openssl_verify(<span class="variable">$data</span>, <span class="variable">$signature</span>, <span class="variable">$pubkeyid</span>);
 openssl_free_key(<span class="variable">$pubkeyid</span>);</code></pre>
+<h2 id='api-libraries'>API Libraries</h2 id='api-libraries'>
+<h3 id='api-libraries/ruby'>Ruby</h3 id='api-libraries/ruby'>
+<p>CrowdFlower currently maintains a Ruby gem for interacting with the API.  The gem
+can be found here: <a href="https://github.com/dolores/rtfm-ruby">https://github.com/dolores/rtfm-ruby</a>
+
+</p>
+<h3 id='api-libraries/other'>Other</h3 id='api-libraries/other'>
+<p>If you&#39;ve created a simple wrapper for the RTFM API in another language, we would
+be happy to host it on our Github account.  Let us know by emailing rtfm@crowdflower.com
+
+</p>
 <h2 id='moderation'>Moderation</h2 id='moderation'>
 <p>Moderators follow extensive rules while screening images. These rules have been
 effective in avoiding user complaints and problems with Apple&#39;s App Store
@@ -361,7 +389,7 @@ review process, specifically:
 </ul>
 <h2 id='contact'>Contact</h2 id='contact'>
 <p>Report issues or suggest improvements on our
-<a href="https://github.com/dolores/rtfm-api/issues">GitHub repository</a>.
+<a href="https://github.com/dolores/rtfm-api/issues">GitHub repository</a> or email us at rtfm@crowdflower.com.
 </p>
 
 </div></body>
