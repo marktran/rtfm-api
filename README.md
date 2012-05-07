@@ -205,7 +205,7 @@ notify you. All pending webhooks will be sent when you re-enable your webhook.
 #### Signature
 
 All webhook POSTs include a "X-CrowdFlower-Signature" HTTP header. You can use
-this signature to ensure that you only accepts requests from our servers.
+this signature to ensure that you only accept requests from our servers.
 
 The signature is composed of a Base64 encoded SHA1 digest of the JSON body and is
 computed by signing the unescaped JSON body of the request with an RSA key.
